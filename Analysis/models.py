@@ -48,7 +48,7 @@ class Exams(models.Model):
     subject = models.CharField(max_length=20, null=True, blank=True)
     student = models.ForeignKey(Student, models.SET_NULL, null=True)
     score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    year = models.IntegerField(null=True, blank=True)
+    year = models.PositiveIntegerField()
     exam_type = models.CharField(max_length=20, choices=EXAM_TYPE, default='none')
 
     class Meta:

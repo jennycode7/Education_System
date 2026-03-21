@@ -5,35 +5,52 @@ import random
 
 fake = Faker()
 
+
 class Command(BaseCommand):
-    help = "Seed DataBase"
+    help = "Seed Database"
 
     def handle(self, *args, **options):
-        students = Student.objects.all()
+        students = Student.objects.all()[:10]
 
-        common_subjects = ['English', 'Mathematics', 'World History']
+        subjects = ["English", "Mathematics", "World History"]
         years = [2020, 2021, 2022, 2023, 2024, 2025]
+        exam_types = ['WAEC', 'NECO']
 
-
+        created_count = 0
 
         for student in students:
 
-            for year in years:
-                for subject in common_subjects:
+            # ✅ pick ONE year per student
+            year = random.choice(years)
+            exam_type = random.choice(exam_types)
 
-                    score = random.choice([
-                        round(random.uniform(40, 100), 2), 
-                        None
-                    ])
+            for subject in subjects:
 
-                    Exams.objects.create(
-                        student=student,
-                        subject=subject,
-                        score=score,
-                        year=year
-                    ) 
-        
+                # ✅ prevent duplicates
+                if Exams.objects.filter(
+                    student=student,
+                    subject=subject,
+                    year=year,
+                    exam_type=exam_type
 
+                ).exists():
+                    continue
 
+                score = random.choice([
+                    round(random.uniform(40, 100), 2),
+                    None
+                ])
 
-        self.stdout.write(self.style.SUCCESS("Database seeded successfully"))
+                Exams.objects.create(
+                    student=student,
+                    subject=subject,
+                    score=score,
+                    year=year,
+                    exam_type=exam_type
+                )
+
+                created_count += 1
+
+        self.stdout.write(
+            self.style.SUCCESS(f"✅ Seeded {created_count} records")
+        )

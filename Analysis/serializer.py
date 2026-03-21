@@ -1,5 +1,4 @@
 from django.db.models import fields
-
 from rest_framework import serializers 
 from .models import Student, Exams, LGA, School
 
@@ -23,7 +22,7 @@ class StudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Student
-        fields = ['id', 'first_name', 'school', 'current_class']
+        fields = ['id', 'first_name', 'last_name', 'other_names', 'school', 'year', 'current_class']
 
 
 class LGASerializer(serializers.ModelSerializer):
